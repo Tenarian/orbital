@@ -5,6 +5,7 @@ qt6_dep = dependency('qt6', modules: ['Core', 'Network', 'DBus', 'Test'])
 # Generate MOC files for headers with Q_OBJECT
 moc_sources = qt6_mod.compile_moc(
     headers: [
+        'include/orbital/configstore.h',
         'include/orbital/dbusinterface.h',
         'include/orbital/envvarschema.h',
         'include/orbital/gamelibrary.h',
@@ -20,6 +21,7 @@ moc_sources = qt6_mod.compile_moc(
 
 liborbital = library(
     'liborbital',
+    'src/configstore.cpp',
     'src/dbusinterface.cpp',
     'src/envvarschema.cpp',
     'src/gamelibrary.cpp',
