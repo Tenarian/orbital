@@ -1,0 +1,268 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "x-orbital-category": {
+    "id": "vulkan",
+    "label": "Vulkan",
+    "icon": "vulkan.svg",
+    "description": "Vulkan loader, layers, and DXVK settings"
+  },
+  "properties": {
+    "VK_LOADER_DEBUG": {
+      "type": "string",
+      "enum": ["error", "warn", "info", "debug", "layer", "driver", "all"],
+      "x-orbital": {
+        "label": "Vulkan Loader Debug",
+        "widget": "multiselect",
+        "separator": ",",
+        "separator-policy": "strict",
+        "description": "Enable Vulkan Loader debug messages"
+      }
+    },
+    "VK_LOADER_DEVICE_SELECT": {
+      "type": "string",
+      "pattern": "^(0x[0-9a-f]{4}:0x[0-9a-f]{4}|[0-9]+:[0-9]+)$",
+      "x-orbital": {
+        "label": "Vulkan Device Select",
+        "widget": "text",
+        "description": "Force a specific physical device to the top of the list (format: hex or decimal vendor_id:device_id, Linux only)"
+      }
+    },
+    "VK_LOADER_DISABLE_SELECT": {
+      "type": "boolean",
+      "default": false,
+      "x-orbital": {
+        "label": "Disable Device Selection",
+        "widget": "toggle",
+        "description": "Disable the loader's default device selection algorithm (Linux only)"
+      }
+    },
+    "VK_LOADER_DISABLE_INST_EXT_FILTER": {
+      "type": "boolean",
+      "default": false,
+      "x-orbital": {
+        "label": "Disable Instance Extension Filter",
+        "widget": "toggle",
+        "description": "Disable filtering out instance extensions the loader does not support"
+      }
+    },
+    "VK_LOADER_DISABLE_DYNAMIC_LIBRARY_UNLOADING": {
+      "type": "boolean",
+      "default": false,
+      "x-orbital": {
+        "label": "Disable Dynamic Library Unloading",
+        "widget": "toggle",
+        "description": "Keep dynamic libraries loaded after vkDestroyInstance (for leak sanitizer support)"
+      }
+    },
+    "VK_LOADER_DRIVERS_SELECT": {
+      "type": "string",
+      "x-orbital": {
+        "label": "Vulkan Drivers Select",
+        "widget": "multiselect",
+        "separator": ",",
+        "separator-policy": "strict",
+        "description": "Select only drivers whose manifest file name matches the given glob patterns"
+      }
+    },
+    "VK_LOADER_DRIVERS_DISABLE": {
+      "type": "string",
+      "x-orbital": {
+        "label": "Vulkan Drivers Disable",
+        "widget": "multiselect",
+        "separator": ",",
+        "separator-policy": "strict",
+        "description": "Disable drivers whose manifest file name matches the given glob patterns (checked before VK_LOADER_DRIVERS_SELECT)"
+      }
+    },
+    "VK_LOADER_LAYERS_ENABLE": {
+      "type": "string",
+      "x-orbital": {
+        "label": "Vulkan Layers Enable",
+        "widget": "multiselect",
+        "separator": ",",
+        "separator-policy": "strict",
+        "description": "Select only layers whose name matches the given glob patterns"
+      }
+    },
+    "VK_LOADER_LAYERS_DISABLE": {
+      "type": "string",
+      "x-orbital": {
+        "label": "Vulkan Layers Disable",
+        "widget": "multiselect",
+        "separator": ",",
+        "separator-policy": "strict",
+        "description": "Disable layers whose name matches the given glob patterns (checked before VK_LOADER_LAYERS_ENABLE)"
+      }
+    },
+    "VK_LOADER_LAYERS_ALLOW": {
+      "type": "string",
+      "x-orbital": {
+        "label": "Vulkan Layers Allow",
+        "widget": "multiselect",
+        "separator": ",",
+        "separator-policy": "strict",
+        "description": "Prevent layers from being disabled by VK_LOADER_LAYERS_DISABLE"
+      }
+    },
+    "VK_LOADER_DEVICE_ID_FILTER": {
+      "type": "string",
+      "x-orbital": {
+        "label": "Vulkan Device ID Filter",
+        "widget": "text",
+        "description": "Only list physical devices matching the given device ID filter (comma-separated decimal/hex values, use : for ranges)"
+      }
+    },
+    "VK_LOADER_VENDOR_ID_FILTER": {
+      "type": "string",
+      "x-orbital": {
+        "label": "Vulkan Vendor ID Filter",
+        "widget": "text",
+        "description": "Only list physical devices matching the given vendor ID filter (comma-separated decimal/hex values, use : for ranges)"
+      }
+    },
+    "VK_LOADER_DRIVER_ID_FILTER": {
+      "type": "string",
+      "x-orbital": {
+        "label": "Vulkan Driver ID Filter",
+        "widget": "text",
+        "description": "Only list physical devices matching the given driver ID filter (comma-separated decimal/hex values, use : for ranges)"
+      }
+    },
+    "VK_LAYER_PATH": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "Vulkan Layer Path",
+        "widget": "path",
+        "description": "Override the loader's default explicit layer search path (colon/semicolon separated)"
+      }
+    },
+    "VK_IMPLICIT_LAYER_PATH": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "Vulkan Implicit Layer Path",
+        "widget": "path",
+        "description": "Override the loader's default implicit layer search path (colon/semicolon separated)"
+      }
+    },
+    "VK_ADD_LAYER_PATH": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "Vulkan Add Layer Path",
+        "widget": "path",
+        "description": "Add additional paths for explicit layer search (colon/semicolon separated)"
+      }
+    },
+    "VK_ADD_IMPLICIT_LAYER_PATH": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "Vulkan Add Implicit Layer Path",
+        "widget": "path",
+        "description": "Add additional paths for implicit layer search (colon/semicolon separated)"
+      }
+    },
+    "VK_DRIVER_FILES": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "Vulkan Driver Files",
+        "widget": "path",
+        "description": "Force the loader to use specific JSON driver manifest files (colon/semicolon separated)"
+      }
+    },
+    "VK_ADD_DRIVER_FILES": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "Vulkan Add Driver Files",
+        "widget": "path",
+        "description": "Provide additional JSON driver manifest files for the loader to use (colon/semicolon separated)"
+      }
+    },
+    "VK_ICD_FILENAMES": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "Vulkan ICD Filenames",
+        "widget": "path",
+        "description": "Force the loader to use specific ICD JSON files (DEPRECATED — use VK_DRIVER_FILES instead)",
+        "deprecated": true,
+        "deprecationWarning": "VK_ICD_FILENAMES is deprecated. Use VK_DRIVER_FILES instead."
+      }
+    },
+    "VK_INSTANCE_LAYERS": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "Vulkan Instance Layers",
+        "widget": "text",
+        "description": "Force the given layers into the Enabled layers list (DEPRECATED — semicolon separated)",
+        "deprecated": true,
+        "deprecationWarning": "VK_INSTANCE_LAYERS is deprecated. Use VK_LOADER_LAYERS_ENABLE instead."
+      }
+    },
+    "DXVK_HUD": {
+      "type": "string",
+      "enum": [
+        "disable",
+        "fps",
+        "frametimes",
+        "framecount",
+        "devinfo",
+        "pipelineIndex",
+        "compute",
+        "rt",
+        "dxr"
+      ],
+      "x-orbital": {
+        "label": "DXVK HUD",
+        "widget": "multiselect",
+        "separator": ",",
+        "separator-policy": "lenient",
+        "lenient-separators": [",", ":", "|", ", "],
+        "description": "Show DXVK HUD information (FPS, frametimes, etc.)"
+      }
+    },
+    "DXVK_LOG_LEVEL": {
+      "type": "string",
+      "enum": ["none", "info", "debug", "verbose"],
+      "x-orbital": {
+        "label": "DXVK Log Level",
+        "widget": "dropdown",
+        "description": "DXVK logging verbosity"
+      }
+    },
+    "DXVK_STATE_CACHE_PATH": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "DXVK State Cache Path",
+        "widget": "path",
+        "description": "Custom path for DXVK state cache"
+      }
+    },
+    "DXVK_ENABLE_FRAMERATE_LIMIT": {
+      "type": "boolean",
+      "default": false,
+      "x-orbital": {
+        "label": "Enable FPS Limit",
+        "widget": "toggle",
+        "description": "Enable framerate limiting in DXVK"
+      }
+    },
+    "DXVK_FRAME_RATE": {
+      "type": "number",
+      "default": 60,
+      "minimum": 1,
+      "maximum": 240,
+      "x-orbital": {
+        "label": "Frame Rate Limit",
+        "widget": "slider",
+        "description": "Target framerate when DXVK_ENABLE_FRAMERATE_LIMIT is enabled"
+      }
+    }
+  }
+}

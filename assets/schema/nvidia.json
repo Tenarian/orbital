@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "x-orbital-category": {
+    "id": "nvidia",
+    "label": "Nvidia",
+    "icon": "nvidia.svg",
+    "description": "NVIDIA GPU settings"
+  },
+  "properties": {
+    "PRIME_OFFLOAD": {
+      "x-orbital": {
+        "label": "PRIME Offload (prime-run)",
+        "description": "Run game on discrete NVIDIA GPU instead of iGPU",
+        "widget": "toggle",
+        "type": "env-group",
+        "vars": {
+          "__NV_PRIME_RENDER_OFFLOAD": {
+            "value": "1",
+            "locked": true
+          },
+          "__NV_PRIME_RENDER_OFFLOAD_PROVIDER": {
+            "widget": "gpu-select",
+            "filter": "nvidia"
+          },
+          "__GLX_VENDOR_LIBRARY_NAME": {
+            "value": "nvidia",
+            "locked": true
+          }
+        }
+      }
+    },
+    "DXVK_NVAPI": {
+      "x-orbital": {
+        "label": "DXVK-NvAPI",
+        "description": "Enable DXVK-NvAPI for DLSS and other NVIDIA features",
+        "widget": "toggle",
+        "type": "env-group",
+        "vars": {
+          "DXVK_NVAPI_DRIVER_EXTENSION_ENABLED": {
+            "value": "1",
+            "locked": true
+          },
+          "DXVK_NVAPI_HUD": {
+            "widget": "multiselect",
+            "separator": ","
+          },
+          "DXVK_NVAPI_DISABLE_WRAPPERS": {
+            "type": "boolean",
+            "default": false
+          },
+          "DXVK_NVAPI_DISABLE_DEVICE_OPEN": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    },
+    "NVIDIA_VISIBLE_DEVICES": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "Visible Devices",
+        "widget": "text",
+        "description": "Comma-separated list of visible NVIDIA devices"
+      }
+    },
+    "NVIDIA_DRIVER_CAPABILITIES": {
+      "type": "string",
+      "default": "all",
+      "x-orbital": {
+        "label": "Driver Capabilities",
+        "widget": "text",
+        "description": "NVIDIA driver capabilities"
+      }
+    }
+  }
+}

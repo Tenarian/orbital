@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "x-orbital-category": {
+    "id": "mangohud",
+    "label": "MangoHud",
+    "icon": "mangohud.svg",
+    "description": "MangoHud overlay settings"
+  },
+  "properties": {
+    "MANGOHUD": {
+      "type": "boolean",
+      "default": false,
+      "x-orbital": {
+        "label": "Enable MangoHud",
+        "widget": "toggle",
+        "description": "Enable MangoHud overlay"
+      }
+    },
+    "MANGOHUD_CONFIG": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "MangoHud Config",
+        "widget": "text",
+        "description": "Custom MangoHud configuration string"
+      }
+    },
+    "MANGOHUD_CONFIG_DIR": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "MangoHud Config Dir",
+        "widget": "text",
+        "description": "Directory containing MangoHud config files"
+      }
+    },
+    "MANGOHUD_DLSUFFIX": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "MangoHud DLSO Path",
+        "widget": "text",
+        "description": "Custom MangoHud .so path"
+      }
+    }
+  }
+}

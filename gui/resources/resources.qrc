@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/gui">
+        <file>qml/main.qml</file>
+        <file>qml/components/GameCard.qml</file>
+        <file>qml/components/HeroView.qml</file>
+        <file>qml/components/ConflictResolver.qml</file>
+        <file>qml/components/EnvVarWidget.qml</file>
+        <file>qml/views/LibraryView.qml</file>
+        <file>qml/views/GameDetailView.qml</file>
+        <file>qml/views/ProtonManagerView.qml</file>
+        <file>qml/views/SettingsView.qml</file>
+    </qresource>
+</RCC>

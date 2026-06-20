@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "x-orbital-category": {
+    "id": "radeon",
+    "label": "AMD Radeon",
+    "icon": "radeon.svg",
+    "description": "AMD Radeon driver settings"
+  },
+  "properties": {
+    "RADV_PERFTEST": {
+      "type": "string",
+      "enum": ["none", "aco", "nggc", "gc", "rt", "dxr"],
+      "x-orbital": {
+        "label": "RADV Perf Test",
+        "widget": "multiselect",
+        "separator": ",",
+        "separator-policy": "strict"
+      }
+    },
+    "RADV_DEDICATED_ALLOCATION": {
+      "type": "boolean",
+      "default": false,
+      "x-orbital": {
+        "label": "Dedicated Allocation",
+        "widget": "toggle",
+        "description": "Enable dedicated memory allocation"
+      }
+    },
+    "RADV_SHADER_CACHE": {
+      "type": "boolean",
+      "default": true,
+      "x-orbital": {
+        "label": "Shader Cache",
+        "widget": "toggle",
+        "description": "Enable RADV shader cache"
+      }
+    },
+    "RADV_PERFTEST_XGC": {
+      "type": "boolean",
+      "default": false,
+      "x-orbital": {
+        "label": "XGC Test",
+        "widget": "toggle",
+        "description": "Enable XGC (eXtended Graphics Core) testing"
+      }
+    }
+  }
+}

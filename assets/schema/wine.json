@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "x-orbital-category": {
+    "id": "wine",
+    "label": "Wine",
+    "icon": "wine.svg",
+    "description": "Wine and Windows compatibility settings"
+  },
+  "properties": {
+    "WINEDEBUG": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "Wine Debug",
+        "widget": "text",
+        "description": "Wine debug channels (e.g., '+relay,+msg')"
+      }
+    },
+    "WINELOADER": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "Wine Loader Path",
+        "widget": "text",
+        "description": "Custom wine-loader path"
+      }
+    },
+    "WINEESYNC": {
+      "type": "boolean",
+      "default": false,
+      "x-orbital": {
+        "label": "Esync",
+        "widget": "toggle",
+        "description": "Enable Wine Esync for better threading performance"
+      }
+    },
+    "WINEFSYNC": {
+      "type": "boolean",
+      "default": false,
+      "x-orbital": {
+        "label": "Fsync",
+        "widget": "toggle",
+        "description": "Enable Wine Fsync for better threading performance (requires kernel futex2)"
+      }
+    },
+    "WINEDLLOVERRIDES": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "DLL Overrides",
+        "widget": "text",
+        "description": "Wine DLL overrides (e.g., 'd3d9=b,d3d10=n')"
+      }
+    },
+    "WINEPREFIX": {
+      "type": "string",
+      "default": "",
+      "locked": true,
+      "x-orbital": {
+        "label": "Wine Prefix",
+        "widget": "text",
+        "description": "Wine prefix directory (managed by Orbital)",
+        "readOnly": true
+      }
+    }
+  }
+}

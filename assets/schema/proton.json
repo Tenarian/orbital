@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "x-orbital-category": {
+    "id": "proton",
+    "label": "Proton",
+    "icon": "proton.svg",
+    "description": "Proton and Steam Play settings"
+  },
+  "properties": {
+    "PROTON_ENABLE_WAYLAND": {
+      "type": "boolean",
+      "default": false,
+      "x-orbital": {
+        "label": "Enable Wayland",
+        "widget": "toggle",
+        "description": "Run game natively on Wayland instead of XWayland"
+      }
+    },
+    "PROTON_USE_STEAMWORKS_OVERLAY": {
+      "type": "boolean",
+      "default": true,
+      "x-orbital": {
+        "label": "Steamworks Overlay",
+        "widget": "toggle",
+        "description": "Enable Steamworks overlay support"
+      }
+    },
+    "PROTON_FIX_GAMEPAD": {
+      "type": "boolean",
+      "default": false,
+      "x-orbital": {
+        "label": "Fix Gamepad",
+        "widget": "toggle",
+        "description": "Fix gamepad input issues for some games"
+      }
+    }
+  }
+}

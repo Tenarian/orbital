@@ -1,0 +1,13 @@
+CompileFlags:
+    Remove:
+        - -mno-direct-extern-access
+        - -Wno-sfinae-incomplete
+    Add:
+        - -fno-direct-access-external-data
+        - -std=c++20
+
+Style:
+    AngledHeaders: [".*/qt6/.*"]
+
+Completion:
+    HeaderInsertion: Never

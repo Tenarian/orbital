@@ -1,0 +1,20 @@
+// Project-level settings for Orbital (C++20 / Meson / Qt6)
+// Overrides user settings (~/.config/zed/settings.json) for this project only.
+{
+  "tab_size": 2,
+
+  "file_types": {
+    "C++": [
+      "**/include/**",
+      "h",
+      "hpp",
+      "hxx",
+      "hh",
+      "inl",
+      "ipp",
+      "tcc",
+      "txx",
+    ],
+    "YAML": [".clang-tidy"],
+  },
+}

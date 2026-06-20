@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "x-orbital-category": {
+    "id": "mesa",
+    "label": "Mesa",
+    "icon": "mesa.svg",
+    "description": "Mesa driver and general graphics settings"
+  },
+  "properties": {
+    "MESA_GL_VERSION_OVERRIDE": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "GL Version Override",
+        "widget": "text",
+        "description": "Force OpenGL version (e.g., '3.3core')"
+      }
+    },
+    "MESA_GLSL_VERSION_OVERRIDE": {
+      "type": "string",
+      "default": "",
+      "x-orbital": {
+        "label": "GLSL Version Override",
+        "widget": "text",
+        "description": "Force GLSL version"
+      }
+    },
+    "MESA_SHADER_THREADS": {
+      "type": "number",
+      "default": 0,
+      "minimum": 0,
+      "maximum": 64,
+      "x-orbital": {
+        "label": "Shader Threads",
+        "widget": "slider",
+        "description": "Number of shader compilation threads (0 = auto)"
+      }
+    },
+    "MESA_VK_KHR_SHADER_FLOAT16_INT8": {
+      "type": "boolean",
+      "default": false,
+      "x-orbital": {
+        "label": "Float16/Int8 Support",
+        "widget": "toggle",
+        "description": "Enable float16 and int8 support in Vulkan shaders"
+      }
+    },
+    "MESA_VK_DEBUG_LEVEL": {
+      "type": "string",
+      "enum": ["none", "basic", "range", "full"],
+      "x-orbital": {
+        "label": "Vulkan Debug Level",
+        "widget": "dropdown",
+        "description": "Vulkan debug message verbosity"
+      }
+    }
+  }
+}

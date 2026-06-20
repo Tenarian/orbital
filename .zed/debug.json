@@ -1,0 +1,29 @@
+[
+  {
+    "label": "Meson: orbital (CLI)",
+    "adapter": "CodeLLDB",
+    "program": "$ZED_WORKTREE_ROOT/build/cli/orbital",
+    "args": [],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "request": "launch",
+    "build": "Meson: Build All"
+  },
+  {
+    "label": "Meson: orbital-gui (GUI)",
+    "adapter": "CodeLLDB",
+    "program": "$ZED_WORKTREE_ROOT/build/gui/orbital-gui",
+    "args": [],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "request": "launch",
+    "build": "Meson: Build All"
+  },
+  {
+    "label": "Meson: Tests",
+    "adapter": "CodeLLDB",
+    "program": "$ZED_WORKTREE_ROOT/build/tests/test_gamelibrary",
+    "args": [],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "request": "launch",
+    "build": "Meson: Build Tests"
+  }
+]

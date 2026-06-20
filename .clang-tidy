@@ -1,0 +1,18 @@
+Checks: "-*,bugprone-*,cert-*,cppcoreguidelines-*,misc-*,performance-*,read*-*,simplify-*,uncaught-exception-*"
+
+CheckOptions:
+    - key: bugprone-suspicious-void-cast.CheckMacros
+      value: "false"
+    - key: modernize-use-auto.MinTypeLength
+      value: "3"
+
+FormatStyle:
+    language: Cpp
+    BasedOnStyle: LLVM
+    AllowShortFunctionsOnASingleLine: EmptyBody
+
+HeaderFilter:
+    - lib/include/
+    - cli/include/
+    - gui/include/
+    - tests/include/

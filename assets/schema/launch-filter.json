@@ -1,0 +1,10 @@
+{
+  "description": "System environment variables to filter out before launching games",
+  "denyList": [
+    "LD_PRELOAD",
+    "LD_LIBRARY_PATH",
+    "WINEPREFIX",
+    "WINEFSYNC",
+    "WINEESYNC"
+  ]
+}

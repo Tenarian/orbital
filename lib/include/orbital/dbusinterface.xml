@@ -1,0 +1,18 @@
+<interface name="io.orbital.Launcher">
+  <method name="ListGames">
+    <arg direction="out" type="aa{sv}" name="games"/>
+  </method>
+  <method name="LaunchGame">
+    <arg direction="in"  type="s" name="gameId"/>
+    <arg direction="out" type="b" name="success"/>
+  </method>
+  <signal name="GameStarted">
+    <arg type="s" name="gameId"/>
+    <arg type="x" name="pid"/>
+  </signal>
+  <signal name="GameExited">
+    <arg type="s" name="gameId"/>
+    <arg type="i" name="exitCode"/>
+  </signal>
+  <signal name="LibraryChanged"/>
+</interface>

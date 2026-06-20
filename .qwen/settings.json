@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(meson *)",
+      "Bash(ninja *)",
+      "Bash(pkg-config *)",
+      "Bash(grep *)",
+      "Bash(find *)",
+      "Bash(true)",
+      "Bash(clang-tidy *)",
+      "Bash(./build/cli/orbital *)"
+    ]
+  },
+  "$version": 4
+}
