@@ -613,7 +613,12 @@ Installed to `/usr/share/orbital/schema/`. User overrides: `~/.config/orbital/sc
           },
           "__NV_PRIME_RENDER_OFFLOAD_PROVIDER": {
             "widget": "gpu-select",
-            "filter": "nvidia"
+            "filter": "nvidia",
+            "source": "runtime:gpu-list",
+            "mapping": {
+              "display": "{vendor} {name} ({vram}MB)",
+              "value": "{pci_id}"
+            }
           },
           "__GLX_VENDOR_LIBRARY_NAME": {
             "value": "nvidia",
@@ -643,6 +648,129 @@ Installed to `/usr/share/orbital/schema/`. User overrides: `~/.config/orbital/sc
 - **`strict`** — only accepts the canonical separator (e.g. RADV_PERFTEST)
 - Determined per env var according to its own docs
 - **No normalization** — raw user input is preserved; only validate and report errors
+
+### Runtime Sources
+
+Some widgets need dynamic option lists that cannot be hardcoded in the schema — e.g. the list of Vulkan devices, installed Wine versions, audio sinks. These are provided by the **runtime source system**, invoked via the `source` field on `x-orbital`:
+
+```json
+"MESA_VK_DEVICE_SELECT": {
+  "type": "string",
+  "x-orbital": {
+    "label": "Vulkan Device",
+    "widget": "gpu-select",
+    "source": "runtime:gpu-list",
+    "filter": "any",
+    "mapping": {
+      "display": "{vendor} {name} ({vram}MB)",
+      "value": "{pci_id}"
+    }
+  }
+}
+```
+
+- `source: "runtime:gpu-list"` → looks up `gpu-list` in the runtime source registry (populated by source plugins — see Plugin System below)
+- `filter` → optional filter function applied to the source's items (e.g. `"nvidia"`, `"amd"`, `"any"`)
+- `mapping.display` → format string for the human-readable label shown in the dropdown
+- `mapping.value` → format string for the actual env var value written to metadata
+
+When `source` is absent, `gpu-select` falls back to a built-in Vulkan device enumeration (legacy behavior, kept for backward compatibility).
+
+### Format Strings & Placeholder Table
+
+`mapping.display` and `mapping.value` use format strings with named placeholders enclosed in `{}`:
+
+```
+"{vendor} {name} ({vram}MB)"  →  "AMD Radeon RX 7900 XTX (24576MB)"
+"{pci_id}"                    →  "1002:744c"
+```
+
+Placeholders are resolved against a registered **placeholder table** at runtime. The table is populated by placeholder plugins (see Plugin System below). Common placeholders include `vendor`, `name`, `vram`, `pci_id`, `driver`, `device_path` — but the set is extensible.
+
+If a placeholder is not registered, the format string fails loudly at render time (the dropdown item shows `"<unresolved:placeholder>"` rather than silently producing a broken value).
+
+---
+
+## Plugin System
+
+Orbital has two independent plugin systems. They are intentionally separate because they solve different problems. Both use a C ABI (`extern "C"`) to ensure stability across compiler versions and build configurations.
+
+### Plugin Discovery
+
+```
+$ORBITAL_PLUGIN_PATH          # env override (highest priority)
+~/.config/orbital/plugins/    # user plugins
+/usr/lib/orbital/plugins/     # system plugins
+```
+
+All three paths are scanned at startup; `.so` files matching `orbital_plugin_*.so` or `orbital_placeholder_*.so` / `orbital_source_*.so` are loaded via `dlopen`. Each plugin's registration function is called exactly once.
+
+### ABI Stability
+
+- All plugin APIs use C ABI (`extern "C"`)
+- Memory ownership is explicit: strings returned from plugin callbacks must be freed using the corresponding `free_*` function provided by the registry, not by the caller directly
+- Structs passed across the boundary are versioned with a `version` field checked on load
+- A plugin built against an older header may be rejected if its version is below the registry's minimum supported version
+
+### 1. Placeholder Plugins
+
+Extend the **format string placeholder table** used by `x-orbital` `mapping.display` / `mapping.value` resolution.
+
+```cpp
+// Plugin entry point — called once at load time
+extern "C" int orbital_placeholders_register(OrbitalPlaceholderRegistry* reg);
+
+// Example: a GPU info plugin providing vendor/vram/pci_id placeholders
+extern "C" int orbital_placeholders_register(OrbitalPlaceholderRegistry* reg) {
+    reg->add("vendor", gpu_resolve_vendor);
+    reg->add("vram",   gpu_resolve_vram);
+    reg->add("pci_id", gpu_resolve_pci_id);
+    return ORBITAL_OK;
+}
+```
+
+**Conflict resolution:** if two plugins register the same placeholder name, that bare placeholder is rejected entirely. To use it, the schema must reference it with an explicit `plugin-id:placeholder` prefix:
+
+```
+"vendor"                   → rejected (ambiguous)
+"plugin-gpu-amd:vendor"    → resolved to plugin-gpu-amd's implementation
+"plugin-gpu-nvidia:vendor" → resolved to plugin-gpu-nvidia's implementation
+```
+
+This means conflict resolution happens at schema authoring time, not at runtime. A schema that uses a bare placeholder name that happens to be ambiguous will fail loudly, forcing the author to be explicit about which plugin they intend.
+
+### 2. Source Plugins
+
+Extend the **runtime source registry** — i.e. provide the dynamic data that `source: "runtime:gpu-list"` refers to.
+
+```cpp
+extern "C" int orbital_sources_register(OrbitalSourceRegistry* reg);
+
+extern "C" int orbital_sources_register(OrbitalSourceRegistry* reg) {
+    reg->add_source("gpu-list", []() -> OrbitalDataList {
+        return enumerate_vulkan_devices();
+    });
+    reg->add_source("wine-versions", []() -> OrbitalDataList {
+        return enumerate_installed_wine_versions();
+    });
+    return ORBITAL_OK;
+}
+```
+
+Each source returns an `OrbitalDataList` — a list of items where each item is a map of placeholder name → value. When the GUI renders a `gpu-select` widget bound to `source: "runtime:gpu-list"`, it calls the registered source, then applies `mapping.display` / `mapping.value` to each item to produce the dropdown.
+
+Source plugins provide runtime data only. Schema definitions themselves live in `assets/schema/` and go through community review via PR (see Open Design Decisions) — they are not loaded from arbitrary `.so` files at runtime.
+
+### Built-in Plugins
+
+A small set of plugins ships with the launcher and is loaded automatically (no discovery scan needed):
+
+| Plugin | Type | Provides |
+|---|---|---|
+| `orbital_placeholder_gpu` | placeholder | `vendor`, `name`, `vram`, `pci_id`, `driver`, `device_path` |
+| `orbital_source_gpu` | source | `runtime:gpu-list` (enumerates Vulkan devices via `vulkaninfo` or direct ICD parse) |
+
+These cover the common case (GPU selection) out of the box. Third-party plugins can extend or override them by registering the same names with higher-priority discovery paths (e.g. a user plugin in `~/.config/orbital/plugins/` shadows the built-in).
 
 ---
 
@@ -710,11 +838,14 @@ Artwork is stored in `~/.cache/orbital/artwork/{uuid}/` — not referenced by fi
   "suppressEnvWarning": false,
   "sidebarCollapsed": false,
   "steamGridDbApiKey": "",
-  "protonCheckUpdatesOnStartup": true
+  "protonCheckUpdatesOnStartup": true,
+  "schemaVersion": "1.0.0"
 }
 ```
 
 Flat key-value object — easy to extend with new settings.
+
+`schemaVersion` pins the env var schema set the launcher expects. Schemas ship in `assets/schema/` within the project repo and are versioned via the launcher's own version bump (community contributions via PR — see Open Design Decisions). When the launcher starts, it checks that the installed schema set's reported version is compatible with `schemaVersion`; mismatches are logged as warnings, not fatal.
 
 ### Symlinks
 
@@ -976,6 +1107,8 @@ liborbital_dep = declare_dependency(
 - **IGDB vs SteamGridDB for metadata** — SteamGridDB for artwork (free API key, simpler). IGDB opt-in in settings for richer metadata (description, genres, release year). Requires OAuth client credentials.
 - **`orbital-daemon` vs GUI-only D-Bus** — GUI-only for v1. Document that D-Bus is unavailable when GUI is closed. Daemon deferred to v2.
 - **GE-Proton update check** — via GitHub releases API on startup (toggleable in `config.json`).
+- **Schema distribution** — Schemas ship in `assets/schema/` within the launcher repo (not a separate mono repo). Community contributions follow the same PR-based workflow as the `orbital-game-launcher/presets` sub-repo: contributors fork the launcher repo, edit schema files under `assets/schema/`, and open a PR for review. Once merged, the new schema lands in the next launcher release. This keeps schema and loader in lockstep (no version-skew risk) while still allowing community-driven schema growth. A separate `orbital-schemas` repo is deferred to v2 if/when contribution volume warrants it.
+- **Plugin ABI versioning** — v1 ships a single frozen ABI. If breaking changes are needed later, bump the registration struct's `version` field and reject older plugins at load with a clear error message pointing the user to the plugin's upstream for a rebuild.
 
 ## Suggested Implementation Order
 
