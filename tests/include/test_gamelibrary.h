@@ -10,6 +10,8 @@ class TestGameLibrary : public QObject {
     Q_OBJECT
 
 private slots:
+    void initTestCase();
+    void cleanup();          // wipe test data dir between tests
     void testCase_addGame();
     void testCase_removeGame();
     void testCase_updateGame();
@@ -24,7 +26,7 @@ private slots:
 
 private:
     QTemporaryDir m_tempDir;
-    void setupPaths();
+    void wipeDataDir();
 };
 
 } // namespace Orbital

@@ -1,6 +1,12 @@
 # Test include directory
 test_include = include_directories('include', '../lib/include')
 
+# Tests need to find built-in schemas under assets/schema/. In test mode,
+# QStandardPaths::locate(GenericDataLocation, "orbital/schema") won't find
+# them, so we set ORBITAL_DATA_DIR to the source root.
+test_env = environment()
+test_env.set('ORBITAL_DATA_DIR', meson.project_source_root())
+
 # Generate MOC files for each test header with Q_OBJECT
 gamelibrary_moc = qt6_mod.compile_moc(
     headers: ['include/test_gamelibrary.h'],
@@ -46,6 +52,6 @@ test_presetmerge = executable(
 )
 
 # Run tests
-test('game_library', test_gamelibrary)
-test('env_var_schema', test_envvarschema)
-test('preset_merge', test_presetmerge)
+test('game_library', test_gamelibrary, env: test_env)
+test('env_var_schema', test_envvarschema, env: test_env)
+test('preset_merge', test_presetmerge, env: test_env)
