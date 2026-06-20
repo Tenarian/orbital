@@ -5,16 +5,25 @@
 
 namespace Orbital {
 
+// Per PRD §XDG Directory Layout, all paths should be:
+//   ~/.config/orbital/         (XDG_CONFIG_HOME/orbital/)
+//   ~/.local/share/orbital/    (XDG_DATA_HOME/orbital/)
+//   ~/.cache/orbital/          (XDG_CACHE_HOME/orbital/)
+//
+// We use the Generic* locations and append "/orbital" explicitly so the
+// path is independent of QCoreApplication::organizationName() / applicationName()
+// (which would produce doubled "orbital/orbital/" prefixes otherwise).
+
 QString Paths::resolvedConfigDir() {
-    return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + "/orbital";
 }
 
 QString Paths::resolvedDataDir() {
-    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/orbital";
 }
 
 QString Paths::resolvedCacheDir() {
-    return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    return QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation) + "/orbital";
 }
 
 QString Paths::config() {
